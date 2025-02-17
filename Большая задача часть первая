@@ -1,0 +1,34 @@
+import os
+
+import requests
+import sys
+import pygame
+
+pygame.init()
+s = w, h = 600, 450
+screen = pygame.display.set_mode(s)
+pygame.display.set_caption('Project')
+
+url =  'https://static-maps.yandex.ru/v1'
+par = {'apikey': "4e60121e-3e68-41f0-bd84-eced30775d1c",
+       'll': '133.883824,-23.723375',
+       'z': '0'}
+
+r = requests.get(url, par)
+if not r:
+    print(f'{r.status_code}{r.reason}')
+    sys.exit(1)
+
+with open('ecucueucguecgbxwjgxjxeuiubeueb.png', 'wb') as m:
+    m.write(r.content)
+
+run = True
+mi = pygame.image.load('ecucueucguecgbxwjgxjxeuiubeueb.png')
+while run:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            run = False
+    screen.blit(mi, (0, 0))
+    pygame.display.flip()
+os.remove('ecucueucguecgbxwjgxjxeuiubeueb.png')
+pygame.quit()
