@@ -8,26 +8,53 @@ pygame.init()
 s = w, h = 600, 450
 screen = pygame.display.set_mode(s)
 pygame.display.set_caption('Project')
+z = 15
+ll = [14.43, 35.91]
 
-url =  'https://static-maps.yandex.ru/v1'
-par = {'apikey': "4e60121e-3e68-41f0-bd84-eced30775d1c",
-       'll': '133.883824,-23.723375',
-       'z': '0'}
+def update_map():
+    url = 'https://static-maps.yandex.ru/v1'
+    par = {'apikey': "4e60121e-3e68-41f0-bd84-eced30775d1c",
+           'll': f'{ll[0]},{ll[1]}',
+           'z': str(z)}
 
-r = requests.get(url, par)
-if not r:
-    print(f'{r.status_code}{r.reason}')
-    sys.exit(1)
+    r = requests.get(url, par)
+    if not r:
+        print(f'{r.status_code}{r.reason}')
+        sys.exit(1)
 
-with open('ecucueucguecgbxwjgxjxeuiubeueb.png', 'wb') as m:
-    m.write(r.content)
+    with open('ecucueucguecgbxwjgxjxeuiubeueb.png', 'wb') as m:
+        m.write(r.content)
+
+    return pygame.image.load('ecucueucguecgbxwjgxjxeuiubeueb.png')
+
 
 run = True
-mi = pygame.image.load('ecucueucguecgbxwjgxjxeuiubeueb.png')
+mi = update_map()
 while run:
     for event in pygame.event.get():
+        d = (22 - z) / 1000
         if event.type == pygame.QUIT:
             run = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_PAGEUP:
+                z += 1
+                if z == 22:
+                    z = 21
+            if event.key == pygame.K_PAGEDOWN:
+                z -= 1
+                if z == -1:
+                    z = 0
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                ll[0] -= d
+            if event.key == pygame.K_RIGHT:
+                ll[0] += d
+            if event.key == pygame.K_DOWN:
+                ll[1] -= d
+            if event.key == pygame.K_UP:
+                ll[1] += d
+        mi = update_map()
+
     screen.blit(mi, (0, 0))
     pygame.display.flip()
 os.remove('ecucueucguecgbxwjgxjxeuiubeueb.png')
